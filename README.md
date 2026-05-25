@@ -43,6 +43,7 @@
    npm init -y
    npm install discord.js dotenv sqlite3 axios
 3. **Создайте файл .env на основе .env.example и заполните своими данными**:
+   ```env
    TOKEN=ваш_токен_бота
    OWNER_ID=ваш_discord_id
    LOG_MODE=debug
