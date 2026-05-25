@@ -1,0 +1,16 @@
+# Secret
+.env
+
+# Databases
+*.sqlite
+*.sqlite3
+
+# Logs
+*.txt
+!README.md
+
+# Relations
+node_modules/
+
+# LM Studio files
+*.gguf
