@@ -1,4 +1,4 @@
-// commands.js — обработка всех команд бота (префикс !)
+// commands.js — обработка всех команд бота
 const db = require('./db');
 const chat = require('./chat');
 const logger = require('./logger');
@@ -179,7 +179,7 @@ async function handle(message) {
             if (sub === 'add') {
                 const action = args.shift()?.toLowerCase();
                 if (!action) {
-                    await message.reply('Укажи действие (hug, pat, sing).');
+                    await message.reply('Укажи действие (hug, pat).');
                     return true;
                 }
                 if (!message.attachments.size) {
@@ -189,7 +189,7 @@ async function handle(message) {
                 const attachment = message.attachments.first();
 
                 if (!attachment.contentType || !attachment.contentType.startsWith('image/gif')) {
-                    await message.reply('Принимаются только анимированные GIF-файлы. Попробуй снова с гифкой!');
+                    await message.reply('Принимаются только анимированные GIF-файлы. Попробуй снова!');
                     return true;
                 }
 
@@ -243,10 +243,10 @@ async function handle(message) {
             await message.reply('Используй: `!gif add <действие>` (прикрепи GIF), `!gif remove <действие> <ID>`, `!gif list <действие>`');
             return true;
         }
-    } // ← закрытие блока if (isOwner)
+    }
 
     // ============================
-    // АДМИНСКИЕ КОМАНДЫ (доступны при hasAccess)
+    // АДМИНСКИЕ КОМАНДЫ
     // ============================
 
     if (command === 'watch') {
@@ -292,12 +292,12 @@ async function handle(message) {
             const target = message.mentions.channels.first() || message.channel;
             logger.context('info', guildName, channelName, `!chat watch: ${target.name} by ${message.author.tag}`);
             const added = await db.addChatChannel(message.guild.id, target.id, message.author.id);
-            await message.reply(added ? `Бот теперь будет отвечать в ${target}.` : `ℹ️ ${target} уже в списке.`);
+            await message.reply(added ? `Бот теперь будет отвечать в ${target}.` : `ℹ${target} уже в списке.`);
         } else if (sub === 'unwatch') {
             const target = message.mentions.channels.first() || message.channel;
             logger.context('info', guildName, channelName, `!chat unwatch: ${target.name} by ${message.author.tag}`);
             const removed = await db.removeChatChannel(message.guild.id, target.id);
-            await message.reply(removed ? `Бот больше не отвечает в ${target}.` : `⚠️ ${target} не был в списке.`);
+            await message.reply(removed ? `Бот больше не отвечает в ${target}.` : `${target} не был в списке.`);
         } else if (sub === 'list') {
             const channels = await db.getChatChannels(message.guild.id);
             if (channels.length === 0) {

@@ -130,8 +130,7 @@ client.on('messageCreate', async (message) => {
 // Проверяем, начинается ли сообщение с префикса
 if (message.content.startsWith(PREFIX)) {
     const isCommand = await commands.handle(message);
-    if (isCommand) return; // команда обработана, дальше не идём
-    // если команда не распознана, можно просто игнорировать или показать подсказку
+    if (isCommand) return; // команда обработана
 }   
 
 

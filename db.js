@@ -1,6 +1,4 @@
 // db.js is a module for working with the SQLite database.
-// Responsible for table creation, migrations, and all operations
-// with files (saveFile) and the channel whitelist (allowed_channels).
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./database.sqlite');
 const logger = require('./logger');
@@ -56,7 +54,7 @@ db.all(`PRAGMA table_info(files)`, (err, rows) => {
         )
     `);
 
-    // Таблица каналов, где Мику разрешено отвечать
+    // Таблица каналов, где боту разрешено отвечать
     db.run(`
         CREATE TABLE IF NOT EXISTS miku_channels (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,7 +66,7 @@ db.all(`PRAGMA table_info(files)`, (err, rows) => {
         )
     `);
 
-    // Таблица с гифками для действий Мику
+    // Таблица с гифками для действий
     db.run(`
     CREATE TABLE IF NOT EXISTS miku_gifs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -98,12 +96,12 @@ function saveFile(data) {
                 data.userId,
                 data.originalName,
                 data.savedName,
-                data.url,            // path хранит ссылку
+                data.url,
                 data.type,
                 data.size,
                 data.channelId,
                 data.serverId,
-                data.buffer          // сам файл (Buffer)
+                data.buffer
             ],
             function(err) {
                 if (err) reject(err);

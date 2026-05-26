@@ -1,4 +1,4 @@
-// chat.js – модуль для общения в стиле Хацунэ Мику
+// chat.js – модуль для общения
 const fs = require('fs');
 const path = require('path');
 const logger = require('./logger');
@@ -9,7 +9,6 @@ const db = require('./db');
 const PHRASES_FILE = path.join(__dirname, 'botPhrases.json');
 let phrases = {};
 
-// кулдаун
 const lastResponseTime = new Map();
 const COOLDOWN_SECONDS = config.cooldownSeconds || 10;
 
@@ -38,7 +37,7 @@ function format(text, userMention) {
     return text.replace(/\{user\}/g, userMention);
 }
 
-// Старая JSON‑логика (оставлена как запасная)
+// Старая JSON‑логика (запасная)
 function jsonReply(message, userMention) {
     const content = message.content.toLowerCase();
     const keywords = phrases.keywords || {};
@@ -57,7 +56,7 @@ function jsonReply(message, userMention) {
     return null;
 }
 
-// Системный промпт – здесь мы задаём характер Мику
+// Промпт
 function buildSystemPrompt() {
     return `
     
@@ -168,7 +167,7 @@ Your goal is to genuinely talk, emotionally connect, and feel real.
 
 `;}
 
-// ИИ‑режим (основной)
+// ИИ‑режим
 async function aiReply(message) {
     // Преобразуем коллекцию в массив, сортируем и берём последние 6 сообщений
     const recentMessages = [...message.channel.messages.cache
@@ -228,17 +227,16 @@ async function processMessage(message, channelCheck = null) {
 
     let reply = null;
 
-    // проверяем, упомянули ли бота (или ключевые слова в ai‑режиме не нужны — она отвечает всегда)
+    // проверяем, упомянули ли бота
     const mentioned = message.mentions.has(message.client.user);
 
     if (config.chatMode === 'ai') {
-        // В ИИ‑режиме можно отвечать только если упомянули, либо всегда (на твой выбор)
         if (mentioned) {
             reply = await aiReply(message);
         }
     }
 
-    // Если ИИ не дал ответа (или режим json), пробуем JSON
+    // Если ИИ не дал ответа, пробуем JSON
     if (!reply) {
         const userMention = `<@${message.author.id}>`;
         reply = jsonReply(message, userMention);
